@@ -1,0 +1,63 @@
+﻿
+@{
+    ViewBag.Title = "IndexJS";
+}
+
+<h2>IndexJS</h2>
+
+<div>
+    <h2>All Movies</h2>
+    <ul id="movies" />
+</div>
+<div>
+    <h2>Search by ID</h2>
+    <input type="text" id="movieId" size="5" />
+    <input type="button" value="Search" onclick="find();" />
+    <div class="container" id="spinner">
+        <i class="fa fa-spinner fa-spin fa-3x"></i>
+    </div>
+    <p id="movie" />
+</div>
+
+
+<script>
+
+    var uri = '/api/Movies';
+
+
+    $(document).ready(function () {
+        // Send an AJAX request
+        $.getJSON(uri)
+            .done(function (data) {
+                // On success, 'data' contains a list of movies.
+                $.each(data, function (key, item) {
+                    // Add a list item for the movie.
+                    $('<li>', { text: formatItem(item) }).appendTo($('#movies'));
+                });
+            })
+        .always(function () {
+            $('#spinner').hide();
+        });
+    });
+
+
+    function formatItem(item) {
+        return item.Title + ': €' + item.Price;
+    }
+
+
+    function find() {
+        $('#spinner').show();
+        var id = $('#movieId').val();
+        $.getJSON(uri + '/' + id)
+            .done(function (data) {
+                $('#movie').text(formatItem(data));
+            })
+            .fail(function (jqXHR, textStatus, err) {
+                $('#movie').text('Error: ' + err);
+            })
+        .always(function () {
+            $('#spinner').hide();
+        });
+    }
+</script>

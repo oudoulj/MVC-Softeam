@@ -1,0 +1,67 @@
+﻿@using GridMvc.Html
+@using GridMvc.Sorting
+@model IEnumerable<MovieApplication.Models.Movie>
+
+@{
+    ViewBag.Title = "IndexGridMvc";
+}
+
+<h2>IndexGridMvc</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+
+@*@Html.Grid(Model).AutoGenerateColumns()*@
+
+@Html.Grid(Model).Named("MoviesGrid").Columns(columns =>
+{
+    columns.Add(m => m.ID).SetWidth(20);
+    columns.Add(m => m.Title).Titled("Movie title").SetWidth(110).SortInitialDirection(GridSortDirection.Ascending);
+    columns.Add(m => m.Genre);
+    columns.Add(m => m.ReleaseDate).Titled("Year").Format("{0:yyyy}");
+    columns.Add(m => m.Price);
+    // Adding not mapped column, that renders body, using inline Razor html helper
+    columns.Add()
+               .Encoded(false)
+               .Sanitized(false)
+               .SetWidth(100)
+               .RenderValueAs(m =>
+            @<b>
+                @Html.ActionLink("Edit movie", "Edit", new { id = m.ID }, new { @class = "modal_link" })
+            </b>);
+    columns.Add()
+               .Encoded(false)
+               .Sanitized(false)
+               .SetWidth(80)
+               .RenderValueAs(m =>
+            @<b>
+                @Html.ActionLink("Delete", "Delete", new { id = m.ID }, new { @class = "modal_link" })
+            </b>);
+}).WithPaging(5).Sortable().Filterable()
+
+@*<script type="text/javascript">
+    $(function () {
+        pageGrids.MoviesGrid.onRowSelect(function (e) {
+            alert(e.row.Title);
+        });
+    })
+</script>*@
+
+<script type="text/javascript">
+    $(function () {
+        pageGrids.MoviesGrid.onRowSelect(function (e) {
+            $.ajax({
+                type: "GET",
+                url: "/Movie/Edit?id=" + e.row.ID
+            });
+            //$.post("/Movie/Edit?id=" + e.row.ID, function (data) {
+            //    if (data.Status <= 0) {
+            //        alert(data.Message);
+            //        return;
+            //    }
+            //    //$("#order-content").html(data.Content);
+            //});
+        });
+    })
+</script>
