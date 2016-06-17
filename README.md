@@ -1,3 +1,4 @@
 # MVC-Softeam
-Veuillez suivre le TP ici :
-https://1drv.ms/o/s!AjHsHrFz50eInsx4fnmyVC9rQgSwSw
+Veuillez suivre les TP ici :
+https://github.com/oudoulj/MVC-Softeam/blob/master/TP1.pdf
+https://github.com/oudoulj/MVC-Softeam/blob/master/TP2.pdf
